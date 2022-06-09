@@ -56,7 +56,7 @@ def imageChipsFromSingleBandArray(data_arr, y_size=5, x_size=5, stride=1):
     image_chips = np.pad(image_chips, (int(y_size/2),int(x_size/2)), 'reflect')
     image_chips = image.extract_patches_2d(image_chips, (y_size, x_size))
     
-    image_chips = image_chips[image_chips[i] for i in range(len(image_chips)) if i % stride == 0]
+    image_chips = image_chips[i for i in range(len(image_chips)) if i % stride == 0]
     return(image_chips)
     
 # define a function to create image chips from array
