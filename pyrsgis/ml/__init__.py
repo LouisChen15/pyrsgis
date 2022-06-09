@@ -53,14 +53,16 @@ def array2d_to_chips(data_arr, y_size=5, x_size=5):
 
 def imageChipsFromSingleBandArray(data_arr, y_size=5, x_size=5, stride=1):
     image_chips = deepcopy(data_arr)
-    image_chips = np.pad(image_chips, (int(y_size/2),int(x_size/2)), 'reflect')
     height = image_chips.shape[0]
     width = image_chips.shape[1]
+    image_chips = np.pad(image_chips, (int(y_size/2),int(x_size/2)), 'reflect')
+    image_chips = image.extract_patches_2d(image_chips, (y_size, x_size))
+    image_chips = np.reshape(image_chips,(height, width, y_size, x_size))
+
     total_chips = []
-    
     for j in range(height)[::stride]:
         for i in range(width)[::stride]:
-            total_chips.append(image.extract_patches_2d(image_chips[j, i], (y_size, x_size)))
+            total_chips.append(image_chips[j, i])
     
     image_chips = np.array(total_chips)
 
