@@ -206,4 +206,4 @@ def raster_to_chips(file, y_size=5, x_size=5):
 def imageChipsFromFile(infile, y_size=5, x_size=5, stride=1):
     ds, data_arr = read(infile)
 
-    return(imageChipsFromArray(data_arr, y_size=y_size, x_size=x_size, , stride=stride))
+    return(imageChipsFromArray(data_arr, y_size=y_size, x_size=x_size, stride=stride))
