@@ -51,11 +51,12 @@ def array2d_to_chips(data_arr, y_size=5, x_size=5):
 
     return(image_chips)
 
-def imageChipsFromSingleBandArray(data_arr, y_size=5, x_size=5):
+def imageChipsFromSingleBandArray(data_arr, y_size=5, x_size=5, stride=1):
     image_chips = deepcopy(data_arr)
     image_chips = np.pad(image_chips, (int(y_size/2),int(x_size/2)), 'reflect')
     image_chips = image.extract_patches_2d(image_chips, (y_size, x_size))
-
+    
+    image_chips = image_chips[image_chips[i] for i in range(len(image_chips)) if i % stride == 0]
     return(image_chips)
     
 # define a function to create image chips from array
@@ -124,11 +125,11 @@ def array_to_chips(data_arr, y_size=5, x_size=5):
         raise Exception("Sorry, only two or three dimensional arrays allowed.")
     
 
-def imageChipsFromArray(data_array, x_size=5, y_size=5):
+def imageChipsFromArray(data_array, x_size=5, y_size=5, stride=1):
     
     # if array is a single band image
     if len(data_array.shape) == 2:
-        return(imageChipsFromSingleBandArray(data_array, x_size=x_size, y_size=y_size))
+        return(imageChipsFromSingleBandArray(data_array, x_size=x_size, y_size=y_size, stride=stride))
 
     # if array is a multi band image  
     elif len(data_array.shape) > 2:
@@ -136,7 +137,7 @@ def imageChipsFromArray(data_array, x_size=5, y_size=5):
         data_array = np.rollaxis(data_array, 0, 3)
         
         for band in range(data_array.shape[2]):
-            temp_array = imageChipsFromSingleBandArray(data_array[:, :, band], x_size=x_size, y_size=y_size)
+            temp_array = imageChipsFromSingleBandArray(data_array[:, :, band], x_size=x_size, y_size=y_size, stride=stride)
 
             if band == 0:
                 out_array = np.expand_dims(temp_array, axis=3)
@@ -202,7 +203,7 @@ def raster_to_chips(file, y_size=5, x_size=5):
 
     return(array_to_chips(data_arr, y_size=y_size, x_size=x_size))
 
-def imageChipsFromFile(infile, y_size=5, x_size=5):
+def imageChipsFromFile(infile, y_size=5, x_size=5, stride=1):
     ds, data_arr = read(infile)
 
-    return(imageChipsFromArray(data_arr, y_size=y_size, x_size=x_size))
+    return(imageChipsFromArray(data_arr, y_size=y_size, x_size=x_size, , stride=stride))
