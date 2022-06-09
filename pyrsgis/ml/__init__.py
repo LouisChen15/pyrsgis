@@ -56,10 +56,13 @@ def imageChipsFromSingleBandArray(data_arr, y_size=5, x_size=5, stride=1):
     image_chips = np.pad(image_chips, (int(y_size/2),int(x_size/2)), 'reflect')
     height = image_chips.shape[0]
     width = image_chips.shape[1]
+    total_chips = []
     
     for j in range(height)[::stride]:
         for i in range(width)[::stride]:
-            image_chips = image.extract_patches_2d(image_chips, (y_size, x_size))[j, i]
+            total_chips.append(image.extract_patches_2d(image_chips[j, i], (y_size, x_size)))
+    
+    image_chips = np.array(total_chips)
 
     return(image_chips)
     
